@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import type { Project } from "./FolioV2";
 
 interface FloatingImageProps {
@@ -17,7 +17,7 @@ export const FloatingImage = ({ projects, activeProject, selectedProject, setSel
     const springX = useSpring(mouseX, springConfig);
     const springY = useSpring(mouseY, springConfig);
 
-    const lastImg = useRef(projects[0].img);
+    const [previewImg, setPreviewImg] = useState<string | undefined>();
 
     useEffect(() => {
         const handleMouseMove = (e: any) => {
@@ -43,9 +43,12 @@ export const FloatingImage = ({ projects, activeProject, selectedProject, setSel
     }, [selectedProject, mouseX, mouseY]);
 
     useEffect(() => {
-        if (activeProject)
-            lastImg.current = projects[activeProject].img;
-    }, [activeProject])
+        if (activeProject !== null) {
+            setPreviewImg(projects[activeProject].img);
+        } else if (selectedProject) {
+            setPreviewImg(selectedProject.img);
+        }
+    }, [activeProject, selectedProject]);
 
     const handleClose = (e: any) => {
         e.stopPropagation();
@@ -53,6 +56,9 @@ export const FloatingImage = ({ projects, activeProject, selectedProject, setSel
     };
 
     const isHeroVisible = activeProject !== null || selectedProject !== null;
+    const currentImageSrc = activeProject !== null
+        ? projects[activeProject].img
+        : (selectedProject ? selectedProject.img : previewImg);
 
     return (
         <motion.div
@@ -85,7 +91,7 @@ export const FloatingImage = ({ projects, activeProject, selectedProject, setSel
             <div className="relative w-full h-full bg-[#111]">
                 {/* THE IMAGE */}
                 <motion.img
-                    src={activeProject !== null ? projects[activeProject].img : (selectedProject ? selectedProject.img : undefined)}
+                    src={currentImageSrc}
                     alt="Project Preview"
                     className="w-full h-full object-cover block"
                     animate={{
