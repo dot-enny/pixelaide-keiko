@@ -55,6 +55,30 @@ export const FloatingImage = ({ projects, activeProject, selectedProject, setSel
         setSelectedProject(null);
     };
 
+    useEffect(() => {
+        let scrollTimeout;
+
+        const handleWheel = (e: any) => {
+            // Only trigger if a project is selected
+            if (selectedProject) {
+                // e.deltaY < 0 means "Scrolling Up" (physically swiping fingers DOWN on trackpad)
+                // We use a threshold of -30 to avoid accidental micro-scrolls
+                if (e.deltaY < -30 || e.deltaY > 30) {
+                    handleClose(e);
+                }
+            }
+        };
+
+        if (selectedProject) {
+            window.addEventListener('wheel', handleWheel);
+        }
+
+        return () => {
+            window.removeEventListener('wheel', handleWheel);
+        };
+    }, [selectedProject, handleClose]);
+
+
     const isHeroVisible = activeProject !== null || selectedProject !== null;
     const currentImageSrc = activeProject !== null
         ? projects[activeProject].img
@@ -63,23 +87,26 @@ export const FloatingImage = ({ projects, activeProject, selectedProject, setSel
     return (
         <motion.div
             className="fixed top-0 left-0 overflow-hidden pointer-events-none shadow-2xl"
+            drag={selectedProject ? "y" : false} // Only drag vertically when open
+            dragConstraints={{ top: 0, bottom: 0 }} // Snap back if not thrown enough
+            dragElastic={0.2} // Resistance feeling
+            onDragEnd={(e, info) => {
+                if (info.offset.y > 50 || info.offset.y < -50) handleClose(e); // Close if dragged down > 100px
+            }}
             style={{
                 x: springX,
                 y: springY,
                 translateX: "-50%",
                 translateY: "-50%",
-                // FIXED Z-INDEX: 
-                // 10 (Behind Text) when hovering. 
-                // 50 (Front) when selected.
-                zIndex: selectedProject ? 50 : 10
+                zIndex: selectedProject ? 50 : 10,
+                cursor: selectedProject ? "grab" : "auto"
             }}
             initial={{ opacity: 0 }}
             animate={{
-                // FIXED OPACITY: Hide the whole box if nothing is active to prevent "Black Box"
                 opacity: isHeroVisible ? 1 : 0,
                 width: selectedProject ? "90vw" : "400px",
                 height: selectedProject ? "80vh" : "225px",
-                // borderRadius: selectedProject ? "8px" : "4px"
+                // y: selectedProject ? 0 : undefined 
             }}
             transition={{
                 type: "spring",
@@ -100,7 +127,7 @@ export const FloatingImage = ({ projects, activeProject, selectedProject, setSel
                     transition={{ duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
                 />
 
-                {/* --- CINEMA OVERLAY (Only visible when selected) --- */}
+                {/* CINEMA OVERLAY */}
                 <motion.div
                     className="absolute inset-0 z-10 flex flex-col justify-end p-8 md:p-16 pointer-events-auto"
                     initial={{ opacity: 0 }}
