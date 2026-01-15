@@ -56,7 +56,7 @@ export const FloatingImage = ({ projects, activeProject, selectedProject, setSel
     };
 
     useEffect(() => {
-        let scrollTimeout;
+        // let scrollTimeout;
 
         const handleWheel = (e: any) => {
             // Only trigger if a project is selected
