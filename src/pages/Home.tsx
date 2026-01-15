@@ -17,7 +17,7 @@ const SlideTabsVertical = () => {
     top: 0,
     width: 0,
     height: 0,
-    opacity: 0,
+    opacity: 0
   });
 
   return (
@@ -60,7 +60,7 @@ const TabVertical = ({ children, setPosition, href }: { children: ReactNode, set
           top: ref.current.offsetTop,
         })
       }}
-      className="relative z-10 block w-fit cursor-pointer fl-px-4/5 fl-py-1.5/3 uppercase text-white mix-blend-difference fl-text-xl/2xl font-medium"
+      className="relative z-10 block w-fit cursor-pointer px-3 py-1.5 text-xs uppercase text-white mix-blend-difference md:px-5 md:py-3 md:text-base"
     >
       {children}
     </Link>
@@ -69,6 +69,6 @@ const TabVertical = ({ children, setPosition, href }: { children: ReactNode, set
 
 const CursorVertical = ({ position }: { position: { top: number, width: number, height: number, opacity: number } }) => {
   return (
-    <motion.li animate={position} className="absolute z-0 inset-y-0.5 rounded-full bg-white"></motion.li>
+    <motion.li animate={position} className="absolute z-0 inset-y-0.5 rounded-full border-2 border-white"></motion.li>
   )
 }
