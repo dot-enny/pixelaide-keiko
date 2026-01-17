@@ -33,7 +33,7 @@ const SlideTabsVertical = () => {
       <TabVertical href="/" setPosition={setPosition}>Home</TabVertical>
       <TabVertical href="/loco-scrollo" setPosition={setPosition}>loco-scrollo</TabVertical>
       <TabVertical href="/tabs" setPosition={setPosition}>tab controls</TabVertical>
-      <TabVertical href="/reveal-lins" setPosition={setPosition}>links</TabVertical>
+      <TabVertical href="/reveal-links" setPosition={setPosition}>links</TabVertical>
       <TabVertical href="/tabs-with-layout-anim" setPosition={setPosition}>Docs</TabVertical>
       <TabVertical href="/perspective" setPosition={setPosition}>cube perspective</TabVertical>
       <TabVertical href="/my-isometric-scene" setPosition={setPosition}>isometric scene</TabVertical>
